@@ -1,0 +1,12 @@
+{% include 'base.html.twig' %}
+
+{% block title  %} hey !  {% endblock %}
+
+
+{% block body  %}
+
+
+    {{ 'now'|format_datetime(locale='fr') }}
+
+
+{% endblock %}
