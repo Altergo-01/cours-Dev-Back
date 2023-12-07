@@ -49,9 +49,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
     #[Assert\NotBlank(groups: ['user:create'])]
     #[Groups(['user:create', 'user:update'])]
+    #[Assert\Type('string')]
     private ?string $plainPassword = null;
     #[ORM\Column(type: 'json')]
     private array $roles = [];
+
+    /*#[ORM\Column(length: 100)]
+    private ?string $username = null;*/
+
     public function getId(): ?int
     {
         return $this->id;
@@ -116,4 +121,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->plainPassword = null;
     }
+
+    /*public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): static
+    {
+        $this->username = $username;
+
+        return $this;
+    }*/
 }
