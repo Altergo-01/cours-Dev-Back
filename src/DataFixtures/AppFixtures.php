@@ -54,6 +54,22 @@ class AppFixtures extends Fixture
 
         }
 
+        $movies = $faker->movies(10);
+        foreach ($movies as $item){
+
+            $movies = new Movie();
+            $movies->setTitle($item);
+
+            shuffle($createdActors);
+            $createdActorsSliced = array_slice($createdActors, 0, 4);
+            foreach ($createdActorsSliced as $actor){
+                $movies->addActor($actor);
+            }
+
+            $manager->persist($movies);
+
+        }
+
 
         $manager->flush();
 

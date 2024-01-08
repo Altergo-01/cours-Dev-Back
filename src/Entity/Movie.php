@@ -60,6 +60,7 @@ class Movie
     private ?string $director = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+
     private ?string $website = null;
 
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'Movie')]
