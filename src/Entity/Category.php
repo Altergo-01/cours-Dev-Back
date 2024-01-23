@@ -2,14 +2,29 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Put;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['title' => 'partial'])]
+#[Get]
+#[Put(security: "is_granted('ROLE_ADMIN')")]
+#[GetCollection]
+#[Post(security: "is_granted('ROLE_ADMIN')")]
+#[Patch(security : "is_granted('ROLE_ADMIN')")]
+#[Delete(security : "is_granted('ROLE_ADMIN')")]
 class Category
 {
     #[ORM\Id]
@@ -21,11 +36,11 @@ class Category
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Movie::class, inversedBy: 'categories')]
-    private Collection $Movies;
+    private Collection $movies;
 
     public function __construct()
     {
-        $this->Movies = new ArrayCollection();
+        $this->movies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,13 +65,13 @@ class Category
      */
     public function getMovies(): Collection
     {
-        return $this->Movies;
+        return $this->movies;
     }
 
     public function addMovies(Movie $movies): static
     {
-        if (!$this->Movies->contains($movies)) {
-            $this->Movies->add($movies);
+        if (!$this->movies->contains($movies)) {
+            $this->movies->add($movies);
         }
 
         return $this;
@@ -64,7 +79,7 @@ class Category
 
     public function removeMovies(Movie $movies): static
     {
-        $this->Movies->removeElement($movies);
+        $this->movies->removeElement($movies);
 
         return $this;
     }

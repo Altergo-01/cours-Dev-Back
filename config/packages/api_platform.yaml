@@ -11,3 +11,7 @@ api_platform:
 
     graphql:
         enabled: true
+
+    patch_formats:
+        json: [ 'application/merge-patch+json' ]
+        jsonapi: [ 'application/vnd.api+json' ]

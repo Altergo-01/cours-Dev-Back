@@ -57,6 +57,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /*#[ORM\Column(length: 100)]
     private ?string $username = null;*/
 
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[ApiProperty(types: ['https://schema.org/image'])]
+    public ?MediaObject $mediaObject = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -133,4 +138,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }*/
+
+    /**
+     * @return MediaObject|null
+     */
+
+    public function getMediaObject(): ?MediaObject
+    {
+        return $this->mediaObject;
+    }
+
+    public function setMediaObject(?MediaObject $mediaObject): User
+    {
+        $this->mediaObject = $mediaObject;
+
+        return $this;
+    }
+
+    public function removeMediaObject(?MediaObject $mediaObject): static
+    {
+        $this->mediaObject = null;
+
+        return $this;
+    }
+
+
+
 }

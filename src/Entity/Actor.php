@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\ActorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[Post(security: "is_granted('ROLE_ADMIN')")]
 #[Patch(security : "is_granted('ROLE_ADMIN')")]
 #[Delete(security : "is_granted('ROLE_ADMIN')")]
+#[ORM\HasLifecycleCallbacks]
 class Actor
 {
 
@@ -48,7 +50,6 @@ class Actor
     private ?\DateTimeInterface $dob = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     private ?\DateTimeImmutable $createAt = null;
 
     #[ORM\ManyToMany(targetEntity: Movie::class, inversedBy: 'actor', cascade: ["persist"])]
@@ -60,6 +61,11 @@ class Actor
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nationality = null;
+
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[ApiProperty(types: ['https://schema.org/image'])]
+    public ?MediaObject $mediaObject = null;
 
     public function __construct()
     {
@@ -111,10 +117,12 @@ class Actor
     {
         return $this->createAt;
     }
-
-    public function setCreateAt(\DateTimeImmutable $createAt): static
+    #[ORM\PrePersist]
+    public function setCreateAt(): static
     {
-        $this->createAt = $createAt;
+        if($this->createAt === null){
+            $this->createAt = new \DateTimeImmutable();
+        }
 
         return $this;
     }
@@ -138,7 +146,7 @@ class Actor
 
     public function removeMovie(Movie $movie): static
     {
-        $this->movies->removeElement($movie);
+      return  $this->movies->removeElement($movie);
     }
 
     public function getReward(): ?string
@@ -164,5 +172,30 @@ class Actor
 
         return $this;
     }
+
+    /**
+     * @return MediaObject|null
+     */
+
+    public function getMediaObject(): ?MediaObject
+    {
+        return $this->mediaObject;
+    }
+
+    public function setMediaObject(?MediaObject $mediaObject): Actor
+    {
+        $this->mediaObject = $mediaObject;
+
+        return $this;
+    }
+
+    public function removeMediaObject(?MediaObject $mediaObject): static
+    {
+        $this->mediaObject = null;
+
+        return $this;
+    }
+
+
 
 }

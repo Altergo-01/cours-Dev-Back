@@ -4,10 +4,18 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Delete;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,7 +34,6 @@ class Movie
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Assert\NotBlank]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -63,9 +70,16 @@ class Movie
 
     private ?string $website = null;
 
-    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'Movie')]
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'movies')]
     #[Assert\NotBlank]
     private Collection $categories;
+
+
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[ApiProperty(types: ['https://schema.org/image'])]
+    public ?MediaObject $mediaObject = null;
+
 
     public function __construct()
     {
@@ -225,7 +239,7 @@ class Movie
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
-            $category->addMovie($this);
+            $category->addMovies($this);
         }
 
         return $this;
@@ -239,4 +253,29 @@ class Movie
 
         return $this;
     }
+
+    /**
+     * @return MediaObject|null
+     */
+
+    public function getMediaObject(): ?MediaObject
+    {
+        return $this->mediaObject;
+    }
+
+    public function setMediaObject(?MediaObject $mediaObject): Movie
+    {
+        $this->mediaObject = $mediaObject;
+
+        return $this;
+    }
+
+    public function removeMediaObject(?MediaObject $mediaObject): static
+    {
+        $this->mediaObject = null;
+
+        return $this;
+    }
+
+
 }
