@@ -1,4 +1,15 @@
 security:
+
+    role_hierarchy:
+        ROLE_USER: # Le rôle de base
+            - ROLE_VIEWER   # Les utilisateurs avec ce rôle peuvent uniquement voir les données
+        ROLE_ADMIN: # Un rôle d'administration
+            - ROLE_USER     # Les administrateurs ont toutes les autorisations des utilisateurs
+            - ROLE_EDITOR   # En plus, ils ont les autorisations des éditeurs
+        ROLE_SUPER_ADMIN: # Un rôle de super administrateur
+            - ROLE_ADMIN    # Les super administrateurs ont toutes les autorisations des administrateurs
+            - ROLE_ALLOWED_TO_SWITCH
+
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
