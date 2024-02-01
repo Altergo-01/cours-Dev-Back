@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
 #[ApiResource]
-#[ApiFilter(SearchFilter::class, properties: ['lastname' => 'partial', 'firstname' => 'partial', ])]
+#[ApiFilter(SearchFilter::class, properties: ['lastname' => 'partial', 'firstname' => 'partial', 'id' => 'exact'])]
 #[ApiFilter(DateFilter::class, properties: ['dob' => 'partial' ])]
 #[Get]
 #[Put(security: "is_granted('ROLE_ADMIN')")]
