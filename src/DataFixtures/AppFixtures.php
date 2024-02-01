@@ -51,7 +51,7 @@ class AppFixtures extends Fixture
 
             $firstname = $actor[0];
             $lastname = $actor[1];
-            $birthdate = $faker->dateTimeBetween($startDate = '-80 years', $endDate = '-20 years', $timezone = null);
+
 
             $country = $faker->country;
             $reward = $faker->randomElement(['Oscars', 'Grammies', 'Golden Globes', 'BAFTA']);
@@ -60,7 +60,7 @@ class AppFixtures extends Fixture
             $actor = new Actor();
             $actor->setFirstname($firstname);
             $actor->setLastname($lastname);
-            $actor->setDob($birthdate);
+            $actor->setDob($faker->dateTimeThisCentury());
             $actor->setCreateAt(new \DateTimeImmutable());
             $actor->setNationality($country);
             $actor->setReward($reward);
